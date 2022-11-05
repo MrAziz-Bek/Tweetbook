@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Tweetbook.Contracts;
 using Tweetbook.Contracts.V1;
 using Tweetbook.Domain;
 
