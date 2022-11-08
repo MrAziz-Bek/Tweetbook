@@ -8,6 +8,8 @@ public static class ApiRoutes
 
     public static class Posts
     {
-        public const string GetAll = $"{BASE}/posts";
+        public const string GetAll = BASE + "/posts";
+        public const string Get = BASE + "/posts/{postId}";
+        public const string Create = BASE + "/posts";
     }
 }
