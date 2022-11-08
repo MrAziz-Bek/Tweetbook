@@ -4,8 +4,9 @@ namespace Tweetbook.Services;
 
 public interface IPostService
 {
-    List<Post> GetPosts();
-    Post GetPostById(Guid postId);
-    bool UpdatePost(Post postToUpdate);
-    bool DeletePost(Guid postId);
+    Task<Post> GetPostByIdAsync(Guid postId);
+    Task<List<Post>> GetPostsAsync();
+    Task<bool> CreatePostAsync(Post post);
+    Task<bool> UpdatePostAsync(Post postToUpdate);
+    Task<bool> DeletePostAsync(Guid postId);
 }

@@ -1,54 +1,54 @@
+using Microsoft.EntityFrameworkCore;
+using Tweetbook.Data;
 using Tweetbook.Domain;
 
 namespace Tweetbook.Services;
 
 public class PostService : IPostService
 {
-    private readonly List<Post> _posts = new();
+    private readonly DataContext _dataContext;
 
-    public PostService()
+    public PostService(DataContext dataContext)
     {
-        for (var i = 0; i < 5; i++)
-        {
-            _posts.Add(new Post
-            {
-                Id = Guid.NewGuid(),
-                Name = $"Post Name {i}"
-            });
-        }
+        _dataContext = dataContext;
     }
 
-    public bool DeletePost(Guid postId)
+    public async Task<Post> GetPostByIdAsync(Guid postId)
     {
-        var post = GetPostById(postId);
+        return await _dataContext.Posts.SingleOrDefaultAsync(p => p.Id == postId);
+    }
+
+    public async Task<List<Post>> GetPostsAsync()
+    {
+        return await _dataContext.Posts.ToListAsync();
+    }
+
+    public async Task<bool> CreatePostAsync(Post post)
+    {
+        await _dataContext.Posts.AddAsync(post);
+        var created = await _dataContext.SaveChangesAsync();
+
+        return created > 0;
+    }
+
+    public async Task<bool> UpdatePostAsync(Post postToUpdate)
+    {
+        _dataContext.Posts.Update(postToUpdate);
+        var updated = await _dataContext.SaveChangesAsync();
+
+        return updated > 0;
+    }
+
+    public async Task<bool> DeletePostAsync(Guid postId)
+    {
+        var post = await GetPostByIdAsync(postId);
 
         if (post is null)
             return false;
+        
+        _dataContext.Posts.Remove(post);
+        var deleted = await _dataContext.SaveChangesAsync();
 
-        _posts.Remove(post);
-        return true;
-    }
-
-    public Post GetPostById(Guid postId)
-    {
-        return _posts.SingleOrDefault(p => p.Id == postId);
-    }
-
-    public List<Post> GetPosts()
-    {
-        return _posts;
-    }
-
-    public bool UpdatePost(Post postToUpdate)
-    {
-        var exists = GetPostById(postToUpdate.Id) is not null;
-
-        if (!exists)
-            return false;
-
-        var index = _posts.FindIndex(p => p.Id == postToUpdate.Id);
-        _posts[index] = postToUpdate;
-
-        return true;
+        return deleted > 0;
     }
 }
