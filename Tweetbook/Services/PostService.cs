@@ -17,6 +17,18 @@ public class PostService : IPostService
             });
         }
     }
+
+    public bool DeletePost(Guid postId)
+    {
+        var post = GetPostById(postId);
+
+        if (post is null)
+            return false;
+
+        _posts.Remove(post);
+        return true;
+    }
+
     public Post GetPostById(Guid postId)
     {
         return _posts.SingleOrDefault(p => p.Id == postId);
