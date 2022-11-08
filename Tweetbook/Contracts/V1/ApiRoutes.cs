@@ -9,6 +9,8 @@ public static class ApiRoutes
     public static class Posts
     {
         public const string GetAll = BASE + "/posts";
+        public const string Update = BASE + "/posts/{postId}";
+        public const string Delete = BASE + "/posts/{postId}";
         public const string Get = BASE + "/posts/{postId}";
         public const string Create = BASE + "/posts";
     }
